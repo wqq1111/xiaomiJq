@@ -70,6 +70,7 @@ $(function () {
         // console.log(nn);
         dots.removeClass("active").eq(nn).addClass("active");
         pic.css("z-index",5).eq(nn).css("z-index",10);
+        now=nn;
     });
 
 
@@ -92,17 +93,48 @@ $(function () {
     let btns=$(".flash-btn"); //两个按钮
     let box=$(".flash-list");
     let w=box.width()/2;
-    // let count=0;
+    let count=0;
     console.log(btns,box,w);
 
     btns.last().click(function () {
-        // count++;
-        box.css({"transform":"translate(-992px)"});
+        count++;
+        if(count==2){
+            count=1;
+        }
+        box.css({"transform":`translate(${-w*count}px)`});
     })
 
     btns.first().click(function () {
-        // count++;
-        box.css({"transform":"translate(0)"});
+        count--;
+        if(count==-1){
+            count=0;
+        }
+        box.css({"transform":`translate(${-w*count}px)`});
+    })
+
+
+
+    //为你推荐平移
+    let btns1=$(".rec-btn"); //两个按钮
+    let box1=$(".rec-list");
+    let w1=box1.width()/3;
+    let count1=0;
+    console.log(btns,box,w);
+
+    btns1.eq(1).click(function () {
+        count1++;
+        if(count1==3){
+            count1=2;
+        }
+        box1.css({"transform":`translate(${-w1*count1}px)`});
+    })
+
+    btns1.eq(0).click(function () {
+        count1--;
+        if(count1==-1){
+            count1=0;
+        }
+        box1.css({"transform":`translate(${-w*count1}px)`});
     })
 
 
@@ -465,6 +497,78 @@ $(function () {
         }
 
     })
+
+
+    //返回顶部
+    let back=$(".back");
+    back.click(function () {
+        $(document.body).animate({scrollTop:0});
+        $(document.documentElement).animate({scrollTop:0});
+    })
+    $(window).scroll(function () {
+        if(document.body.scrollTop>500){
+            $(".back").css({display:"block"});
+        }else if(document.documentElement.scrollTop>500){
+            $(".back").css({display:"block"});
+        }else{
+            $(".back").css("display","none");
+        }
+    })
+
+
+
+    // 倒计时
+    let timeN=document.querySelectorAll(".num");
+    console.log(timeN);
+
+    setDate();
+
+    setInterval(setDate,1000);
+
+    function setDate() {
+        let arr=fn();
+        timeN.forEach((value,index)=>{
+            value.innerHTML=arr[index];
+        })
+    }
+    //获取数组
+    function fn(){
+        let arr=[];
+        //获取现在的时间
+        let now=new Date();
+        //获取未来的时间
+        let future=new Date(2018,9,1);
+        //计算出未来与现在的时间差（/1000表示将毫秒变为秒）
+        let times=Math.floor((future.getTime()-now.getTime())/1000);
+
+
+        //得到小时数
+        let hour=Math.floor(times%(30*24*60*60)%(24*60*60)/(60*60));
+        if(Math.floor(hour/10)==0){
+            arr.push("0"+hour);
+        }else{
+            arr.push(hour);
+        }
+        //得到分钟数
+        let m=Math.floor(times%(30*24*60*60)%(24*60*60)%(60*60)/60);
+        if(Math.floor(m/10)==0){
+            arr.push("0"+m);
+        }else{
+            arr.push(m);
+        }
+        //得到秒数
+        let s=Math.floor(times%(30*24*60*60)%(24*60*60)%(60*60)%60);
+        if(Math.floor(s/10)==0){
+            arr.push("0"+s);
+        }else{
+            arr.push(s);
+        }
+
+
+
+        return arr;
+    }
+
 
 
 
